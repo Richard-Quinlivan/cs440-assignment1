@@ -20,44 +20,76 @@ struct Iterator_##t															\
 																			\
 };																			\
 
-typedef struct Deque
+typedef struct Deque_int
 {
-	int ** data;
+	int * data;
+	size_t usedLength;
 	size_t length;
-	size_t (*size)(struct Deque *dp);
-	bool (*empty)(struct Deque *dp);
-	int (*at)(struct Deque *dp, int i);
+	char * type_name;
+	bool (*equal)(const int &, const int &)
+	bool (*empty)(struct Deque_int *dp);
+	size_t (*size)(struct Deque_int *dp);
+	int (*at)(struct Deque_int *dp, int i);
+	void (*push_back)(struct Deque_int * dp, int val)
 
-
-} Deque;
-
-char[] Deque_type_name(struct Deque *dp)
+} Deque_int;
+void Deque_int_ctor(struct Deque_int *dp, bool 	(*compare)(const int &, const int &))
 {
-	int length = 7 + strlen("int"); //strlen(#t) //should get the string version of the type name for the macro version
+	dp->equal = compare;
+	dp->data = (int *) malloc(sizeof((int *) * 10);
+	dp->length = 10;
+	dp->usedLength = 0;
+
+	int nameLength = 7 + strlen("int"); //strlen(#t) //should get the string version of the type name for the macro version
+	dp->type_name = (char *) malloc(sizeof(char * nameLength));
 }
 
-bool Deque_empty(struct Deque *dp)
+bool Deque_int_empty(struct Deque_int *dp)
 {
 	return dp->size(dp) == 0;
 }
 
-size_t Deque_int_size(struct Deque *dp)
+size_t Deque_int_size(struct Deque_int *dp)
 {
 	return dp->length;
 }
 
-int Deque_int_at(struct Deque *dp, int i)
+int Deque_int_at(struct Deque_int *dp, int i)
 {
 	assert(i < dp->length && i >= 0);
 	return dp->data[i];
 }
 
-typedef struct Iterator
+void Deque_int_push_back(struct Deque_int *dp, int val)
+{
+	if(dp->usedLength >= dp->length)
+	{
+		dp->Deque_int_resize(dp, dp->length);
+	}
+	dp->data[usedLength] = val;
+	usedLength++;
+}
+
+void Deque_int_resize(struct Deque_int *dp, int oldLength)
+{
+	int * newData = (int *) malloc(sizeof((int *) * oldLength * 2);
+
+	for (int i = 0; i < dp->length; i++)
+	{
+		newData[i] = dp->data[i];
+	}
+	free(dp->data);
+	dp->data = newData;
+	dp->length = oldLength * 2;
+
+}
+
+typedef struct Iterator_int
 {
 
 
 
-} Iterator;
+} Iterator_int;
 
 
 
