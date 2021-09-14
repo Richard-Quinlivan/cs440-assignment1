@@ -82,10 +82,10 @@ calloc(size_t num, size_t size) {
  * Test for class MyClass.
  */
 
-struct MyClass {
-	int id;
-	char name[10];
-};
+// struct MyClass {
+// 	int id;
+// 	char name[10];
+// };
 
 bool
 MyClass_less_by_id(const MyClass &o1, const MyClass &o2) {
