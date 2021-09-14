@@ -3,7 +3,7 @@
 
 #include <assert.h>
 #include <string.h>
-
+#include <stdlib.h>
 
 #define Deque_DEFINE(t)														\
 // struct Deque_##t															\
@@ -35,8 +35,8 @@ typedef struct Deque_int
 	void (*push_back)(struct Deque_int * dp, int val);
 	void (*push_front)(struct Deque_int * dp, int val);
 	void (*resize)(struct Deque_int *dp, size_t oldLength);
-	int (*front)(struct Deque_int *dp);
-	int (*end)(struct Deque_int *dp);
+	int& (*front)(struct Deque_int *dp);
+	int& (*end)(struct Deque_int *dp);
 
 } Deque_int;
 
@@ -47,7 +47,7 @@ bool Deque_int_empty(Deque_int *dp)
 
 size_t Deque_int_size(Deque_int *dp)
 {
-	return dp->length;
+	return dp->usedLength;
 }
 
 int Deque_int_at(Deque_int *dp, int i)
@@ -91,12 +91,12 @@ void Deque_int_resize(Deque_int *dp, size_t oldLength)
 	dp->length = oldLength * 2;
 }
 
-int Deque_int_front(Deque_int *dp)
+int& Deque_int_front(Deque_int *dp)
 {
 	return dp->data[dp->startIndex];
 }
 
-int Deque_int_back(Deque_int *dp)
+int& Deque_int_back(Deque_int *dp)
 {
 	return dp->data[dp->endIndex];
 }
@@ -111,8 +111,9 @@ void Deque_int_ctor(Deque_int *dp, bool (*compare)(const int &, const int &))
 	dp->startIndex = 0;
 	dp->endIndex = 0;
 	int nameLength = 7 + strlen("int"); //strlen(#t) //should get the string version of the type name for the macro version
-	dp->type_name = (char *) malloc(sizeof(char) * nameLength);
+	// dp->type_name = (char *) malloc(sizeof(char) * nameLength);
 
+	dp->type_name = (char *)"Deque_int";
 	dp->empty = &Deque_int_empty;
 	dp->size = &Deque_int_size;
 	dp->at = &Deque_int_at;
@@ -149,8 +150,8 @@ typedef struct Deque_MyClass
 	void (*push_back)(struct Deque_MyClass * dp, struct MyClass val);
 	void (*push_front)(struct Deque_MyClass * dp, struct MyClass val);
 	void (*resize)(struct Deque_MyClass *dp, size_t oldLength);
-	MyClass (*front)(struct Deque_MyClass *dp);
-	MyClass (*back)(struct Deque_MyClass *dp);
+	MyClass& (*front)(struct Deque_MyClass *dp);
+	MyClass& (*back)(struct Deque_MyClass *dp);
 
 } Deque_MyClass;
 
@@ -161,7 +162,7 @@ bool Deque_MyClass_empty(Deque_MyClass *dp)
 
 size_t Deque_MyClass_size(Deque_MyClass *dp)
 {
-	return dp->length;
+	return dp->usedLength;
 }
 
 struct MyClass Deque_MyClass_at(Deque_MyClass *dp, int i)
@@ -205,12 +206,12 @@ void Deque_MyClass_resize(Deque_MyClass *dp, size_t oldLength)
 	dp->length = oldLength * 2;
 }
 
-MyClass Deque_MyClass_front(Deque_MyClass *dp)
+MyClass& Deque_MyClass_front(Deque_MyClass *dp)
 {
 	return dp->data[dp->startIndex];
 }
 
-MyClass Deque_MyClass_back(Deque_MyClass *dp)
+MyClass& Deque_MyClass_back(Deque_MyClass *dp)
 {
 	return dp->data[dp->endIndex];
 }
@@ -224,8 +225,8 @@ void Deque_MyClass_ctor(Deque_MyClass *dp, bool (*compare)(const struct MyClass 
 	dp->startIndex = 0;
 	dp->endIndex = 0;
 	int nameLength = 7 + strlen("MyClass"); //strlen(#t) //should get the string version of the type name for the macro version
-	dp->type_name = (char *) malloc(sizeof(char) * nameLength);
-
+	// dp->type_name = (char *) malloc(sizeof(char) * nameLength);
+	dp->type_name = (char *)"Deque_MyClass";
 	dp->empty = &Deque_MyClass_empty;
 	dp->size = &Deque_MyClass_size;
 	dp->at = &Deque_MyClass_at;
