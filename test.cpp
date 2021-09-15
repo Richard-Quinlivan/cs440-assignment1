@@ -114,7 +114,7 @@ int_less(const int &o1, const int &o2) {
 	return o1 < o2;
 }
 
-Deque_DEFINE(int)
+//Deque_DEFINE(int)
 
 int
 main() {
@@ -144,14 +144,14 @@ main() {
 		MyClass_print(&deq.back(&deq));
 		assert(deq.front(&deq).id == -1);
 		assert(deq.back(&deq).id == 3);
-/*
+
 		deq.pop_front(&deq);
 		deq.pop_back(&deq);
 		assert(deq.front(&deq).id == 0);
 		assert(deq.back(&deq).id == 2);
 
 		assert(deq.size(&deq) == 3);
-
+/*
 		for (Deque_MyClass_Iterator it = deq.begin(&deq); !Deque_MyClass_Iterator_equal(it, deq.end(&deq)); it.inc(&it)) {
 			MyClass_print(&it.deref(&it));
 		}
