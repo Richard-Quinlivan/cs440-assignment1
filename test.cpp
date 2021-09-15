@@ -151,7 +151,7 @@ main() {
 		assert(deq.back(&deq).id == 2);
 
 		assert(deq.size(&deq) == 3);
-/*
+
 		for (Deque_MyClass_Iterator it = deq.begin(&deq); !Deque_MyClass_Iterator_equal(it, deq.end(&deq)); it.inc(&it)) {
 			MyClass_print(&it.deref(&it));
 		}
@@ -202,7 +202,7 @@ main() {
 			assert(deq.back(&deq).id == 2);
 			assert(it.deref(&it).id == 2); // Verify with iterator also.
 		}
-
+/*
 		deq.clear(&deq);
 
 		deq.dtor(&deq);
