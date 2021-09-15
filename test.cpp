@@ -114,7 +114,7 @@ int_less(const int &o1, const int &o2) {
 	return o1 < o2;
 }
 
-//Deque_DEFINE(int)
+Deque_DEFINE(int)
 
 int
 main() {
@@ -202,7 +202,7 @@ main() {
 			assert(deq.back(&deq).id == 2);
 			assert(it.deref(&it).id == 2); // Verify with iterator also.
 		}
-/*
+
 		deq.clear(&deq);
 
 		deq.dtor(&deq);
@@ -519,7 +519,7 @@ main() {
 			deq1.sort(&deq1, iter1,iter2);
 
 		deq1.dtor(&deq1);
-		*/
+
 	}
 
 	// Print allocation info

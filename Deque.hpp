@@ -20,113 +20,6 @@
 // 																			\
 // };																			\
 
-/*{
-	typedef struct Deque_int
-	{
-		int * data;
-		size_t usedLength;
-		size_t length;
-		char type_name [strlen("Deque_int") + 1] = "Deque_int";
-		int frontIndex;
-		int backIndex;
-		bool (*equal)(const int &, const int &);
-		bool (*empty)(struct Deque_int *dp);
-		size_t (*size)(struct Deque_int *dp);
-		int (*at)(struct Deque_int *dp, int i);
-		void (*push_back)(struct Deque_int * dp, int val);
-		void (*push_front)(struct Deque_int * dp, int val);
-		void (*resize)(struct Deque_int *dp, size_t oldLength);
-		int& (*front)(struct Deque_int *dp);
-		int& (*end)(struct Deque_int *dp);
-
-	} Deque_int;
-
-	bool Deque_int_empty(Deque_int *dp)
-	{
-		return dp->size(dp) == 0;
-	}
-
-	size_t Deque_int_size(Deque_int *dp)
-	{
-		return dp->usedLength;
-	}
-
-	int Deque_int_at(Deque_int *dp, int i)
-	{
-		assert(i < dp->length && i >= 0);
-		return dp->data[i];
-	}
-
-	void Deque_int_push_back(Deque_int *dp, int val)
-	{
-		if(dp->usedLength >= dp->length)
-		{
-			dp->resize(dp, dp->length);
-		}
-		dp->data[dp->usedLength] = val;
-		dp->usedLength++;
-		dp->backIndex++;
-	}
-
-	void Deque_int_push_front(Deque_int *dp, int val)
-	{
-		if(dp->usedLength >= dp->length)
-		{
-			dp->resize(dp, dp->length);
-		}
-		dp->data[dp->usedLength] = val;
-		dp->usedLength++;
-		dp->frontIndex--;
-	}
-
-	void Deque_int_resize(Deque_int *dp, size_t oldLength)
-	{
-		int * newData = (int *) malloc(sizeof(int *) * oldLength * 2);
-
-		for (int i = 0; i < dp->length; i++)
-		{
-			newData[i] = dp->data[i];
-		}
-		free(dp->data);
-		dp->data = newData;
-		dp->length = oldLength * 2;
-	}
-
-	int& Deque_int_front(Deque_int *dp)
-	{
-		return dp->data[dp->frontIndex];
-	}
-
-	int& Deque_int_back(Deque_int *dp)
-	{
-		return dp->data[dp->backIndex];
-	}
-
-
-	void Deque_int_ctor(Deque_int *dp, bool (*compare)(const int &, const int &))
-	{
-		dp->equal = compare;
-		dp->data = (int *) malloc(sizeof(int *)* 10);
-		dp->length = 10;
-		dp->usedLength = 0;
-		dp->frontIndex = 0;
-		dp->backIndex = 0;
-		dp->empty = &Deque_int_empty;
-		dp->size = &Deque_int_size;
-		dp->at = &Deque_int_at;
-		dp->push_back = &Deque_int_push_back;
-		dp->resize = &Deque_int_resize;
-		dp->front = &Deque_int_front;
-		dp->end =  &Deque_int_back;
-	}
-
-	typedef struct Iterator_int
-	{
-
-
-
-	} Iterator_int;
-}*/
 struct MyClass {
 	int id;
 	char name[10];
@@ -151,10 +44,13 @@ typedef struct Deque_MyClass
 	void (*pop_front)(struct Deque_MyClass * dp);
 	void (*pop_back)(struct Deque_MyClass * dp);
 	void (*resize)(struct Deque_MyClass *dp, size_t oldLength);
+	void (*sort)(struct Deque_MyClass * dp, Deque_MyClass_Iterator it1, Deque_MyClass_Iterator it2);
+	void (*clear)(struct Deque_MyClass * dp);
 	MyClass& (*front)(struct Deque_MyClass *dp);
 	MyClass& (*back)(struct Deque_MyClass *dp);
 	Deque_MyClass_Iterator (*begin)(struct Deque_MyClass *dp);
 	Deque_MyClass_Iterator (*end)(struct Deque_MyClass *dp);
+	void (*dtor)(struct Deque_MyClass * dp);
 
 } Deque_MyClass;
 
@@ -300,6 +196,23 @@ bool Deque_MyClass_Iterator_equal(Deque_MyClass_Iterator it1, Deque_MyClass_Iter
 	return it1.index == it2.index && it1.deque == it2.deque;
 }
 
+void Deque_MyClass_sort(Deque_MyClass *dp, Deque_MyClass_Iterator it1, Deque_MyClass_Iterator it2)
+{
+
+}
+
+void Deque_MyClass_clear(Deque_MyClass *dp)
+{
+	dp->usedLength = 0;
+	dp->frontIndex = 0;
+	dp->backIndex = 0;
+}
+
+void Deque_MyClass_dtor(Deque_MyClass *dp)
+{
+	free(dp->data);
+}
+
 void Deque_MyClass_ctor(Deque_MyClass *dp, bool (*compare)(const struct MyClass &, const struct MyClass &))
 {
 	dp->equal = compare;
@@ -316,10 +229,13 @@ void Deque_MyClass_ctor(Deque_MyClass *dp, bool (*compare)(const struct MyClass 
 	dp->pop_back = &Deque_MyClass_pop_back;
 	dp->pop_front = &Deque_MyClass_pop_front;
 	dp->resize = &Deque_MyClass_resize;
+	dp->sort = &Deque_MyClass_sort;
+	dp->clear = &Deque_MyClass_clear;
 	dp->front = &Deque_MyClass_front;
 	dp->back =  &Deque_MyClass_back;
 	dp->begin = &Deque_MyClass_Begin;
 	dp->end = &Deque_MyClass_End;
+	dp->dtor = &Deque_MyClass_dtor;
 }
 
 MyClass& Deque_MyClass_Iterator_deref(Deque_MyClass_Iterator *it)
@@ -354,5 +270,266 @@ void Deque_MyClass_Iterator_ctor(Deque_MyClass_Iterator *it, Deque_MyClass *dp, 
 	it->dec = &Deque_MyClass_Iterator_dec;
 }
 
+
+bool Deque_MyClass_equal(Deque_MyClass deq1, Deque_MyClass deq2)
+{
+	return false;
+}
+
+
+
+
+
+
+
+
+struct Deque_int_Iterator;
+
+typedef struct Deque_int
+{
+	int * data;
+	size_t usedLength;
+	size_t length;
+	int frontIndex;
+	int backIndex;
+	char type_name [strlen("Deque_int") + 1] = "Deque_int";
+	bool (*equal)(const int &, const int &);
+	bool (*empty)(struct Deque_int *dp);
+	size_t (*size)(struct Deque_int *dp);
+	int& (*at)(struct Deque_int *dp, int i);
+	void (*push_back)(struct Deque_int * dp, int val);
+	void (*push_front)(struct Deque_int * dp, int val);
+	void (*pop_front)(struct Deque_int * dp);
+	void (*pop_back)(struct Deque_int * dp);
+	void (*resize)(struct Deque_int *dp, size_t oldLength);
+	void (*clear)(struct Deque_int * dp);
+	void (*sort)(struct Deque_int * dp, Deque_int_Iterator it1, Deque_int_Iterator it2);
+	int& (*front)(struct Deque_int *dp);
+	int& (*back)(struct Deque_int *dp);
+	Deque_int_Iterator (*begin)(struct Deque_int *dp);
+	Deque_int_Iterator (*end)(struct Deque_int *dp);
+	void (*dtor)(struct Deque_int * dp);
+
+} Deque_int;
+
+void Deque_int_Iterator_ctor(Deque_int_Iterator *it, Deque_int *dp, int index);
+
+typedef struct Deque_int_Iterator
+{
+	int index;
+	Deque_int * deque;
+	int& (*deref)(struct Deque_int_Iterator *it);
+	void (*inc)(struct Deque_int_Iterator *it);
+	void (*dec)(struct Deque_int_Iterator *it);
+
+} Deque_int_Iterator;
+
+
+bool Deque_int_empty(Deque_int *dp)
+{
+	return dp->size(dp) == 0;
+}
+
+size_t Deque_int_size(Deque_int *dp)
+{
+	return dp->usedLength;
+}
+
+int& Deque_int_at(Deque_int *dp, int i)
+{
+	assert(i < dp->length && i >= 0);
+	return dp->data[dp->frontIndex + i];
+}
+
+void Deque_int_push_back(Deque_int *dp, int val)
+{
+	if(dp->backIndex == dp->frontIndex)
+	{
+		if(dp->usedLength == dp->length) //the deque is full
+		{
+			dp->resize(dp, dp->length);
+		}
+		else if(dp->usedLength == 0) //the deque is empty
+		{
+			dp->backIndex--; //this will offset the increment so they both point to the only element still
+		}
+	}
+	dp->backIndex++;
+	if(dp->backIndex >= dp->length)
+	{
+		dp->backIndex = 0;
+	}
+	dp->usedLength++;
+
+	dp->data[dp->backIndex] = val;
+}
+
+void Deque_int_push_front(Deque_int *dp, int val)
+{
+	if(dp->backIndex == dp->frontIndex)
+	{
+		if(dp->usedLength == dp->length) //the deque is full
+		{
+			dp->resize(dp, dp->length);
+		}
+		else if(dp->usedLength == 0)
+		{
+			dp->frontIndex++; //this will offset the increment so they both point to the only element still
+		}
+	}
+	dp->frontIndex--;
+	if(dp->frontIndex < 0)
+	{
+		dp->frontIndex = dp->length-1;
+	}
+	dp->usedLength++;
+
+	dp->data[dp->frontIndex] = val;
+
+}
+
+void Deque_int_pop_back(Deque_int *dp)
+{
+	if(dp->backIndex == dp->frontIndex && dp->usedLength == dp->length) return;
+
+	dp->backIndex--;
+	if(dp->backIndex < 0)
+	{
+		dp->backIndex = dp->length-1;
+	}
+	dp->usedLength--;
+}
+
+void Deque_int_pop_front(Deque_int *dp)
+{
+	if(dp->backIndex == dp->frontIndex && dp->usedLength == dp->length) return;
+
+	dp->frontIndex++;
+	if(dp->frontIndex >= dp->length)
+	{
+		dp->frontIndex = 0;
+	}
+	dp->usedLength--;
+}
+
+void Deque_int_resize(Deque_int *dp, size_t oldLength)
+{
+	int * newData = (int *) malloc(sizeof(int *) * oldLength * 2);
+
+	for (int i = 0; i < dp->length; i++)
+	{
+		newData[i] = dp->data[i];
+	}
+	free(dp->data);
+	dp->data = newData;
+	dp->length = oldLength * 2;
+}
+
+int& Deque_int_front(Deque_int *dp)
+{
+	return dp->data[dp->frontIndex];
+}
+
+int& Deque_int_back(Deque_int *dp)
+{
+	return dp->data[dp->backIndex];
+}
+
+Deque_int_Iterator Deque_int_Begin(Deque_int *dp)
+{
+	Deque_int_Iterator it;
+	Deque_int_Iterator_ctor(&it, dp, dp->frontIndex);
+	return it;
+}
+
+Deque_int_Iterator Deque_int_End(Deque_int *dp)
+{
+	Deque_int_Iterator it;
+	Deque_int_Iterator_ctor(&it, dp, dp->backIndex+1);
+	return it;
+}
+
+bool Deque_int_Iterator_equal(Deque_int_Iterator it1, Deque_int_Iterator it2)
+{
+	return it1.index == it2.index && it1.deque == it2.deque;
+}
+
+void Deque_int_sort(Deque_int *dp, Deque_int_Iterator it1, Deque_int_Iterator it2)
+{
+
+}
+
+void Deque_int_clear(Deque_int *dp)
+{
+	dp->usedLength = 0;
+	dp->frontIndex = 0;
+	dp->backIndex = 0;
+}
+
+void Deque_int_dtor(Deque_int *dp)
+{
+	free(dp->data);
+}
+
+void Deque_int_ctor(Deque_int *dp, bool (*compare)(const int &, const int &))
+{
+	dp->equal = compare;
+	dp->data = (int *) malloc(sizeof(int *) * 10);
+	dp->length = 10;
+	dp->usedLength = 0;
+	dp->frontIndex = 0;
+	dp->backIndex = 0;
+	dp->empty = &Deque_int_empty;
+	dp->size = &Deque_int_size;
+	dp->at = &Deque_int_at;
+	dp->push_back = &Deque_int_push_back;
+	dp->push_front = &Deque_int_push_front;
+	dp->pop_back = &Deque_int_pop_back;
+	dp->pop_front = &Deque_int_pop_front;
+	dp->resize = &Deque_int_resize;
+	dp->sort = &Deque_int_sort;
+	dp->clear = &Deque_int_clear;
+	dp->front = &Deque_int_front;
+	dp->back =  &Deque_int_back;
+	dp->begin = &Deque_int_Begin;
+	dp->end = &Deque_int_End;
+	dp->dtor = &Deque_int_dtor;
+}
+
+int& Deque_int_Iterator_deref(Deque_int_Iterator *it)
+{
+	return it->deque->data[it->index];
+}
+
+void Deque_int_Iterator_inc(Deque_int_Iterator *it)
+{
+	it->index++;
+	if(it->index >= it->deque->length)
+	{
+		it->index = 0;
+	}
+}
+
+void Deque_int_Iterator_dec(Deque_int_Iterator *it)
+{
+	it->index--;
+	if(it->index < 0)
+	{
+		it->index = it->deque->length-1;
+	}
+}
+
+void Deque_int_Iterator_ctor(Deque_int_Iterator *it, Deque_int *dp, int index)
+{
+	it->index = index;
+	it->deque = dp;
+	it->deref = &Deque_int_Iterator_deref;
+	it->inc = &Deque_int_Iterator_inc;
+	it->dec = &Deque_int_Iterator_dec;
+}
+bool Deque_int_equal(Deque_int deq1, Deque_int deq2)
+{
+	return false;
+}
 
 #endif
