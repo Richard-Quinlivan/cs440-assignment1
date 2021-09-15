@@ -25,9 +25,9 @@ typedef struct Deque_int
 	int * data;
 	size_t usedLength;
 	size_t length;
-	char * type_name;
-	int startIndex;
-	int endIndex;
+	char type_name [strlen("Deque_int") + 1] = "Deque_int";
+	int frontIndex;
+	int backIndex;
 	bool (*equal)(const int &, const int &);
 	bool (*empty)(struct Deque_int *dp);
 	size_t (*size)(struct Deque_int *dp);
@@ -64,7 +64,7 @@ void Deque_int_push_back(Deque_int *dp, int val)
 	}
 	dp->data[dp->usedLength] = val;
 	dp->usedLength++;
-	dp->endIndex++;
+	dp->backIndex++;
 }
 
 void Deque_int_push_front(Deque_int *dp, int val)
@@ -75,7 +75,7 @@ void Deque_int_push_front(Deque_int *dp, int val)
 	}
 	dp->data[dp->usedLength] = val;
 	dp->usedLength++;
-	dp->startIndex--;
+	dp->frontIndex--;
 }
 
 void Deque_int_resize(Deque_int *dp, size_t oldLength)
@@ -93,12 +93,12 @@ void Deque_int_resize(Deque_int *dp, size_t oldLength)
 
 int& Deque_int_front(Deque_int *dp)
 {
-	return dp->data[dp->startIndex];
+	return dp->data[dp->frontIndex];
 }
 
 int& Deque_int_back(Deque_int *dp)
 {
-	return dp->data[dp->endIndex];
+	return dp->data[dp->backIndex];
 }
 
 
@@ -108,12 +108,8 @@ void Deque_int_ctor(Deque_int *dp, bool (*compare)(const int &, const int &))
 	dp->data = (int *) malloc(sizeof(int *)* 10);
 	dp->length = 10;
 	dp->usedLength = 0;
-	dp->startIndex = 0;
-	dp->endIndex = 0;
-	int nameLength = 7 + strlen("int"); //strlen(#t) //should get the string version of the type name for the macro version
-	// dp->type_name = (char *) malloc(sizeof(char) * nameLength);
-
-	dp->type_name = (char *)"Deque_int";
+	dp->frontIndex = 0;
+	dp->backIndex = 0;
 	dp->empty = &Deque_int_empty;
 	dp->size = &Deque_int_size;
 	dp->at = &Deque_int_at;
@@ -140,9 +136,9 @@ typedef struct Deque_MyClass
 	struct MyClass * data;
 	size_t usedLength;
 	size_t length;
-	char * type_name;
-	int startIndex;
-	int endIndex;
+	int frontIndex;
+	int backIndex;
+	char type_name [strlen("Deque_MyClass") + 1] = "Deque_MyClass";
 	bool (*equal)(const struct MyClass &, const struct MyClass &);
 	bool (*empty)(struct Deque_MyClass *dp);
 	size_t (*size)(struct Deque_MyClass *dp);
@@ -173,24 +169,49 @@ struct MyClass Deque_MyClass_at(Deque_MyClass *dp, int i)
 
 void Deque_MyClass_push_back(Deque_MyClass *dp, struct MyClass val)
 {
-	if(dp->usedLength >= dp->length)
+	if(dp->backIndex == dp->frontIndex)
 	{
-		dp->resize(dp, dp->length);
+		if(dp->usedLength == dp->length) //the deque is full
+		{
+			dp->resize(dp, dp->length);
+		}
+		else if(dp->usedLength == 0) //the deque is empty
+		{
+			dp->backIndex--; //this will offset the increment so they both point to the only element still
+		}
 	}
-	dp->data[dp->usedLength] = val;
+	dp->backIndex++;
+	if(dp->backIndex >= dp->length)
+	{
+		dp->backIndex = 0;
+	}
 	dp->usedLength++;
-	dp->endIndex++;
+
+	dp->data[dp->backIndex] = val;
 }
 
 void Deque_MyClass_push_front(Deque_MyClass *dp, MyClass val)
 {
-	if(dp->usedLength >= dp->length)
+	if(dp->backIndex == dp->frontIndex)
 	{
-		dp->resize(dp, dp->length);
+		if(dp->usedLength == dp->length) //the deque is full
+		{
+			dp->resize(dp, dp->length);
+		}
+		else if(dp->usedLength == 0)
+		{
+			dp->frontIndex++; //this will offset the increment so they both point to the only element still
+		}
 	}
-	dp->data[dp->usedLength] = val;
+	dp->frontIndex--;
+	if(dp->frontIndex < 0)
+	{
+		dp->frontIndex = dp->length - 1;
+	}
 	dp->usedLength++;
-	dp->startIndex--;
+
+	dp->data[dp->frontIndex] = val;
+
 }
 
 void Deque_MyClass_resize(Deque_MyClass *dp, size_t oldLength)
@@ -208,12 +229,12 @@ void Deque_MyClass_resize(Deque_MyClass *dp, size_t oldLength)
 
 MyClass& Deque_MyClass_front(Deque_MyClass *dp)
 {
-	return dp->data[dp->startIndex];
+	return dp->data[dp->frontIndex];
 }
 
 MyClass& Deque_MyClass_back(Deque_MyClass *dp)
 {
-	return dp->data[dp->endIndex];
+	return dp->data[dp->backIndex];
 }
 
 void Deque_MyClass_ctor(Deque_MyClass *dp, bool (*compare)(const struct MyClass &, const struct MyClass &))
@@ -222,11 +243,8 @@ void Deque_MyClass_ctor(Deque_MyClass *dp, bool (*compare)(const struct MyClass 
 	dp->data = (struct MyClass *) malloc(sizeof(struct MyClass *) * 10);
 	dp->length = 10;
 	dp->usedLength = 0;
-	dp->startIndex = 0;
-	dp->endIndex = 0;
-	int nameLength = 7 + strlen("MyClass"); //strlen(#t) //should get the string version of the type name for the macro version
-	// dp->type_name = (char *) malloc(sizeof(char) * nameLength);
-	dp->type_name = (char *)"Deque_MyClass";
+	dp->frontIndex = 0;
+	dp->backIndex = 0;
 	dp->empty = &Deque_MyClass_empty;
 	dp->size = &Deque_MyClass_size;
 	dp->at = &Deque_MyClass_at;
