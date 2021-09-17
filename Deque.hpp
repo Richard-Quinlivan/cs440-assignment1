@@ -35,7 +35,7 @@ typedef struct Deque_MyClass
 	int frontIndex;
 	int backIndex;
 	char type_name [strlen("Deque_MyClass") + 1] = "Deque_MyClass";
-	bool (*equal)(const struct MyClass &, const struct MyClass &);
+	bool (*compare)(const struct MyClass &, const struct MyClass &);
 	bool (*empty)(struct Deque_MyClass *dp);
 	size_t (*size)(struct Deque_MyClass *dp);
 	struct MyClass& (*at)(struct Deque_MyClass *dp, int i);
@@ -215,7 +215,7 @@ void Deque_MyClass_dtor(Deque_MyClass *dp)
 
 void Deque_MyClass_ctor(Deque_MyClass *dp, bool (*compare)(const struct MyClass &, const struct MyClass &))
 {
-	dp->equal = compare;
+	dp->compare = compare;
 	dp->data = (struct MyClass *) malloc(sizeof(struct MyClass *) * 10);
 	dp->length = 10;
 	dp->usedLength = 0;
@@ -273,7 +273,15 @@ void Deque_MyClass_Iterator_ctor(Deque_MyClass_Iterator *it, Deque_MyClass *dp, 
 
 bool Deque_MyClass_equal(Deque_MyClass deq1, Deque_MyClass deq2)
 {
-	return false;
+	if(deq1.usedLength != deq2.usedLength) return false;
+    for(int i = 0; i < deq1.usedLength; i++)
+    {
+        if(deq1.compare(deq1.data[deq1.frontIndex + i], deq2.data[deq2.frontIndex + i]) || deq1.compare(deq2.data[deq2.frontIndex + i], deq1.data[deq1.frontIndex + i]))
+        {
+            return false;
+        }
+    }
+    return true;
 }
 
 
@@ -293,7 +301,7 @@ typedef struct Deque_int
 	int frontIndex;
 	int backIndex;
 	char type_name [strlen("Deque_int") + 1] = "Deque_int";
-	bool (*equal)(const int &, const int &);
+	bool (*compare)(const int &, const int &);
 	bool (*empty)(struct Deque_int *dp);
 	size_t (*size)(struct Deque_int *dp);
 	int& (*at)(struct Deque_int *dp, int i);
@@ -473,7 +481,7 @@ void Deque_int_dtor(Deque_int *dp)
 
 void Deque_int_ctor(Deque_int *dp, bool (*compare)(const int &, const int &))
 {
-	dp->equal = compare;
+	dp->compare = compare;
 	dp->data = (int *) malloc(sizeof(int *) * 10);
 	dp->length = 10;
 	dp->usedLength = 0;
@@ -529,7 +537,16 @@ void Deque_int_Iterator_ctor(Deque_int_Iterator *it, Deque_int *dp, int index)
 }
 bool Deque_int_equal(Deque_int deq1, Deque_int deq2)
 {
-	return false;
+	if(deq1.usedLength != deq2.usedLength) return false;
+    for(int i = 0; i < deq1.usedLength; i++)
+    {
+        if(deq1.compare(deq1.data[deq1.frontIndex + i], deq2.data[deq2.frontIndex + i]) || deq1.compare(deq2.data[deq2.frontIndex + i], deq1.data[deq1.frontIndex + i]))
+        {
+            return false;
+        }
+    }
+    return true;
 }
+
 
 #endif

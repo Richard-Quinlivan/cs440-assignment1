@@ -351,19 +351,19 @@ main() {
 					deq.push_front(&deq, i);
 					pb++;
 				}
-		}
-		else {
-			if (deq.size(&deq) > 0) {
-				if (rand(0, 1)(e) == 0) {
-					deq.pop_back(&deq);
-					pob++;
-				}
-				else {
-					deq.pop_front(&deq);
-					pof++;
-				}
-			}
-		}
+    		}
+		    else {
+			    if (deq.size(&deq) > 0) {
+			    	if (rand(0, 1)(e) == 0) {
+			    		deq.pop_back(&deq);
+			    		pob++;
+			    	}
+			    	else {
+			    		deq.pop_front(&deq);
+			    		pof++;
+			    	}
+			    }
+		    }
 			max_size = std::max(deq.size(&deq), max_size);
 			// Randomly access one element.
 			if (deq.size(&deq) > 0) {
