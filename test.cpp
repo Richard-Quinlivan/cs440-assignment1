@@ -81,7 +81,7 @@ calloc(size_t num, size_t size) {
 /*
  * Test for class MyClass.
  */
-
+//
 // struct MyClass {
 // 	int id;
 // 	char name[10];
@@ -103,7 +103,7 @@ MyClass_print(const MyClass *o) {
 	printf("%s\n", o->name);
 }
 
-Deque_DEFINE(MyClass)
+//Deque_DEFINE(MyClass)
 
 /*
  * Test for int.
@@ -114,7 +114,7 @@ int_less(const int &o1, const int &o2) {
 	return o1 < o2;
 }
 
-Deque_DEFINE(int)
+//Deque_DEFINE(int)
 
 int
 main() {
@@ -123,6 +123,8 @@ main() {
 	{
 		Deque_MyClass deq;
 		Deque_MyClass_ctor(&deq, MyClass_less_by_id);
+		// printf("%p\n", deq.compare);
+		// printf("%p\n", deq.data);
 
 		assert(deq.size(&deq) == 0);
 		// size() should return a size_t.
@@ -140,8 +142,8 @@ main() {
 		deq.push_front(&deq, MyClass{0, "Mike"});
 		deq.push_front(&deq, MyClass{-1, "Mary"});
 
-		MyClass_print(&deq.front(&deq));
-		MyClass_print(&deq.back(&deq));
+		// MyClass_print(&deq.front(&deq));
+		// MyClass_print(&deq.back(&deq));
 		assert(deq.front(&deq).id == -1);
 		assert(deq.back(&deq).id == 3);
 
@@ -351,23 +353,23 @@ main() {
 					deq.push_front(&deq, i);
 					pb++;
 				}
-    		}
-		    else {
-			    if (deq.size(&deq) > 0) {
-			    	if (rand(0, 1)(e) == 0) {
-			    		deq.pop_back(&deq);
-			    		pob++;
-			    	}
-			    	else {
-			    		deq.pop_front(&deq);
-			    		pof++;
-			    	}
-			    }
-		    }
+		}
+		else {
+			if (deq.size(&deq) > 0) {
+				if (rand(0, 1)(e) == 0) {
+					deq.pop_back(&deq);
+					pob++;
+				}
+				else {
+					deq.pop_front(&deq);
+					pof++;
+				}
+			}
+		}
 			max_size = std::max(deq.size(&deq), max_size);
 			// Randomly access one element.
 			if (deq.size(&deq) > 0) {
-					sum += deq.at(&deq, rand(0, deq.size(&deq) - 1)(e));
+				sum += deq.at(&deq, rand(0, deq.size(&deq) - 1)(e));
 			}
 		}
 		// Print it out to prevent optimizer from optimizing out the at() calls.
@@ -418,22 +420,22 @@ main() {
 		Deque_int deq1;
 		Deque_int_ctor(&deq1, int_less);
 
-		for (int i=0;i<10000;i++) {
+		for (int i=0;i<10;i++) {
 			deq1.push_back(&deq1, i);
 		}
 
-		for (int i=20000;i>=10000;i--) {
+		for (int i=20;i>=10;i--) {
 			deq1.push_back(&deq1,i);
 		}
 
-		deq1.push_back(&deq1,20001);
+		deq1.push_back(&deq1,21);
 
-		auto iter1 =  deq1.end(&deq1);
+		auto iter1 = deq1.end(&deq1);
 		iter1.dec(&iter1);
 
 		auto iter2 = deq1.begin(&deq1);
 
-		for (int i=0;i<10000;i++) {
+		for (int i=0;i<10;i++) {
 			iter2.inc(&iter2);
 		}
 
@@ -442,7 +444,7 @@ main() {
 		Deque_int deq2;
 		Deque_int_ctor(&deq2 , int_less);
 
-		for(int i=0;i<=20001;i++) {
+		for(int i=0;i<=21;i++) {
 			deq2.push_back(&deq2,i);
 		}
 
@@ -481,7 +483,7 @@ main() {
 		sorted_by_name.push_back(&sorted_by_name, MyClass{3, "Sheldon"});
 
 		assert(!Deque_MyClass_equal(sort_by_id, sorted_by_id));
-		sort_by_id.sort(&sort_by_id, sort_by_id.begin(&sort_by_id), sort_by_id.end(&sort_by_id));
+			sort_by_id.sort(&sort_by_id, sort_by_id.begin(&sort_by_id), sort_by_id.end(&sort_by_id));
 		assert(Deque_MyClass_equal(sort_by_id, sorted_by_id));
 
 		assert(!Deque_MyClass_equal(sort_by_name, sorted_by_name));
