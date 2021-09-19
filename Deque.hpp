@@ -202,27 +202,51 @@ int Deque_MyClass_sort_compare(const void * a, const void * b, void *c)
 	return 0;
 }
 
+bool Deque_MyClass_Is_Used(Deque_MyClass *dp, int index)
+{
+	if(dp->frontIndex < dp->backIndex) return dp->frontIndex <= index && index <= dp->backIndex;
+	else return dp->frontIndex >= index && index >= dp->backIndex;
+}
+
+void Deque_MyClass_sort_helper(Deque_MyClass *dp, int index)
+{
+	int properIndex;
+
+	if(index < dp->frontIndex) properIndex = index + (dp->length - dp->frontIndex);
+	else properIndex = index - dp->frontIndex;
+
+	if(Deque_MyClass_Is_Used(dp, properIndex))
+	{
+		Deque_MyClass_sort_helper(dp, properIndex);
+	}
+	dp->data[properIndex] = dp->data[index];
+}
+
 void Deque_MyClass_sort(Deque_MyClass *dp, Deque_MyClass_Iterator it1, Deque_MyClass_Iterator it2)
 {
-	MyClass * newData = (MyClass *) malloc(sizeof(MyClass *) * dp->length);
-	Deque_MyClass_Iterator iter = dp->begin(dp);
-	Deque_MyClass_Iterator end = dp->end(dp);
-	int frontOffset = 0;
-	int backOffset = 0;
+	int frontOffset;
+	int backOffset;
 
-	int i = 0;
-	for (; !Deque_MyClass_Iterator_equal(iter, end); iter.inc(&iter), i++)
+	if(it1.index < dp->frontIndex) frontOffset = it1.index + (dp->length-1 - dp->frontIndex);
+	else frontOffset = it1.index - dp->frontIndex;
+
+	if(it2.index < dp->frontIndex) backOffset = it2.index + (dp->length-1 - dp->frontIndex);
+	else backOffset = it2.index - dp->frontIndex;
+
+	if((unsigned int)dp->frontIndex != 0)
 	{
-		newData[i] = iter.deref(&iter);
-		if(Deque_MyClass_Iterator_equal(iter, it1)) frontOffset = i;
-		if(Deque_MyClass_Iterator_equal(iter, it2)) backOffset = i;
+		Deque_MyClass_Iterator iter = dp->begin(dp);
+		Deque_MyClass_Iterator end = dp->end(dp);
+		int i = 0;
+		for (; !Deque_MyClass_Iterator_equal(iter, end); iter.inc(&iter), i++)
+		{
+			if(Deque_MyClass_Is_Used(dp, i))
+			{
+				Deque_MyClass_sort_helper(dp, i);
+			}
+			dp->data[i] = iter.deref(&iter);
+		}
 	}
-	if(Deque_MyClass_Iterator_equal(iter, it2)) backOffset = i;
-	free(dp->data);
-	dp->frontIndex = dp->length-1;
-	dp->backIndex = dp->usedLength-1;
-	dp->data = newData;
-
 	qsort_r((void *)(dp->data + frontOffset), backOffset - frontOffset, sizeof(struct MyClass), Deque_MyClass_sort_compare, (void *)dp);
 }
 
@@ -489,30 +513,55 @@ int Deque_int_sort_compare(const void * a, const void * b, void *c)
 	return 0;
 }
 
+
+bool Deque_int_Is_Used(Deque_int *dp, int index)
+{
+	if(dp->frontIndex < dp->backIndex) return dp->frontIndex <= index && index <= dp->backIndex;
+	else return dp->frontIndex >= index && index >= dp->backIndex;
+}
+
+void Deque_int_sort_helper(Deque_int *dp, int index)
+{
+	int properIndex;
+
+	if(index < dp->frontIndex) properIndex = index + (dp->length - dp->frontIndex);
+	else properIndex = index - dp->frontIndex;
+
+	if(Deque_int_Is_Used(dp, properIndex))
+	{
+		Deque_int_sort_helper(dp, properIndex);
+	}
+	dp->data[properIndex] = dp->data[index];
+}
+
 void Deque_int_sort(Deque_int *dp, Deque_int_Iterator it1, Deque_int_Iterator it2)
 {
-	int * newData = (int *) malloc(sizeof(int *) * dp->length);
-	Deque_int_Iterator iter = dp->begin(dp);
-	Deque_int_Iterator end = dp->end(dp);
-	int frontOffset = 0;
-	int backOffset = 0;
+	int frontOffset;
+	int backOffset;
 
-	int i = 0;
-	for (; !Deque_int_Iterator_equal(iter, end); iter.inc(&iter), i++)
+	if(it1.index < dp->frontIndex) frontOffset = it1.index + (dp->length-1 - dp->frontIndex);
+	else frontOffset = it1.index - dp->frontIndex;
+
+	if(it2.index < dp->frontIndex) backOffset = it2.index + (dp->length-1 - dp->frontIndex);
+	else backOffset = it2.index - dp->frontIndex;
+
+	if((unsigned int)dp->frontIndex != 0)
 	{
-		newData[i] = iter.deref(&iter);
-		if(Deque_int_Iterator_equal(iter, it1)) frontOffset = i;
-		if(Deque_int_Iterator_equal(iter, it2)) backOffset = i;
+		Deque_int_Iterator iter = dp->begin(dp);
+		Deque_int_Iterator end = dp->end(dp);
+		int i = 0;
+		for (; !Deque_int_Iterator_equal(iter, end); iter.inc(&iter), i++)
+		{
+			if(Deque_int_Is_Used(dp, i))
+			{
+				Deque_int_sort_helper(dp, i);
+			}
+			dp->data[i] = iter.deref(&iter);
+		}
 	}
-	if(Deque_int_Iterator_equal(iter, it2)) backOffset = i;
-
-	free(dp->data);
-	dp->frontIndex = dp->length-1;
-	dp->backIndex = dp->usedLength-1;
-	dp->data = newData;
-
-	qsort_r((void *)(dp->data + frontOffset), backOffset - frontOffset, sizeof(int), Deque_MyClass_sort_compare, (void *)dp);
+	qsort_r((void *)(dp->data + frontOffset), backOffset - frontOffset, sizeof(int), Deque_int_sort_compare, (void *)dp);
 }
+
 
 void Deque_int_clear(Deque_int *dp)
 {
