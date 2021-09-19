@@ -93,10 +93,6 @@ void Deque_MyClass_push_back(Deque_MyClass *dp, struct MyClass val)
 		{
 			dp->resize(dp, dp->length);
 		}
-		// else if(dp->usedLength == 0) //the deque is empty
-		// {
-		// 	dp->backIndex--; //this will offset the increment so they both point to the only element still
-		// }
 	}
 
 	dp->data[dp->backIndex] = val;
@@ -117,12 +113,7 @@ void Deque_MyClass_push_front(Deque_MyClass *dp, struct MyClass val)
 		{
 			dp->resize(dp, dp->length);
 		}
-		// else if(dp->usedLength == 0)
-		// {
-		// 	dp->frontIndex++; //this will offset the increment so they both point to the only element still
-		// }
 	}
-	// printf("frontIndex = %d\n", dp->frontIndex);
 	dp->data[dp->frontIndex] = val;
 
 	dp->frontIndex--;
@@ -226,6 +217,7 @@ void Deque_MyClass_sort(Deque_MyClass *dp, Deque_MyClass_Iterator it1, Deque_MyC
 		if(Deque_MyClass_Iterator_equal(iter, it1)) frontOffset = i;
 		if(Deque_MyClass_Iterator_equal(iter, it2)) backOffset = i;
 	}
+	if(Deque_MyClass_Iterator_equal(iter, it2)) backOffset = i;
 	free(dp->data);
 	dp->frontIndex = dp->length-1;
 	dp->backIndex = dp->usedLength-1;
@@ -390,14 +382,7 @@ void Deque_int_push_back(Deque_int *dp, int val)
 {
 	if(dp->backIndex == dp->frontIndex)
 	{
-		// if(dp->usedLength == dp->length) //the deque is full
-		// {
-			dp->resize(dp, dp->length);
-		// }
-		// else if(dp->usedLength == 0) //the deque is empty
-		// {
-		// 	dp->backIndex--; //this will offset the increment so they both point to the only element still
-		// }
+		dp->resize(dp, dp->length);
 	}
 	dp->data[dp->backIndex] = val;
 
@@ -413,14 +398,7 @@ void Deque_int_push_front(Deque_int *dp, int val)
 {
 	if(dp->backIndex == dp->frontIndex)
 	{
-		// if(dp->usedLength == dp->length) //the deque is full
-		// {
-			dp->resize(dp, dp->length);
-		// }
-		// else if(dp->usedLength == 0)
-		// {
-		// 	dp->frontIndex++; //this will offset the increment so they both point to the only element still
-		// }
+		dp->resize(dp, dp->length);
 	}
 
 	dp->data[dp->frontIndex] = val;
@@ -526,6 +504,8 @@ void Deque_int_sort(Deque_int *dp, Deque_int_Iterator it1, Deque_int_Iterator it
 		if(Deque_int_Iterator_equal(iter, it1)) frontOffset = i;
 		if(Deque_int_Iterator_equal(iter, it2)) backOffset = i;
 	}
+	if(Deque_int_Iterator_equal(iter, it2)) backOffset = i;
+
 	free(dp->data);
 	dp->frontIndex = dp->length-1;
 	dp->backIndex = dp->usedLength-1;
