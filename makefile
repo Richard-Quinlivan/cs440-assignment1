@@ -8,7 +8,7 @@ gdb:
 	gdb a.out
 
 valgrind:
-	valgrind --leak-check=full --show-leak-kinds=all -v ./a.out
+	valgrind --leak-check=full --show-leak-kinds=all ./a.out
 
 clean:
 	rm a.out *.gch
